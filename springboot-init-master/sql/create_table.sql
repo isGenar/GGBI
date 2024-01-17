@@ -23,14 +23,15 @@ create table if not exists user
 -- 图表信息表
 create table if not exists chart
 (
-    id bigint auto_increment comment 'id' primary key,
-    userId bigint null comment'创建⽤户 id',
-    goal text null comment'分析⽬标',
-    chartData text null comment'图表数据',
-    chartType varchar(128) null comment'图表类型',
-    genChart text null comment'⽣成的图表数据',
-    genResult text null comment'⽣成的分析结论',
-    createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
-    updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    isDelete     tinyint      default 0                 not null comment '是否删除'
+    id         bigint auto_increment comment 'id' primary key,
+    userId     bigint                             null comment '创建⽤户 id',
+    'name'     varchar(256)                       null comment '表名称',
+    goal       text                               null comment '分析⽬标',
+    chartData  text                               null comment '图表数据',
+    chartType  varchar(128)                       null comment '图表类型',
+    genChart   text                               null comment '⽣成的图表数据',
+    genResult  text                               null comment '⽣成的分析结论',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete   tinyint  default 0                 not null comment '是否删除'
 ) comment '图表信息表' collate = utf8mb4_unicode_ci;

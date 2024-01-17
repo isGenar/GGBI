@@ -25,6 +25,11 @@ public class Chart implements Serializable {
     private Long userId;
 
     /**
+     * 表名称
+     */
+    private String name;
+
+    /**
      * 分析⽬标
      */
     private String goal;

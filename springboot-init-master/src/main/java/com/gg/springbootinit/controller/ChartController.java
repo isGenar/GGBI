@@ -11,19 +11,19 @@ import com.gg.springbootinit.constant.CommonConstant;
 import com.gg.springbootinit.constant.UserConstant;
 import com.gg.springbootinit.exception.BusinessException;
 import com.gg.springbootinit.exception.ThrowUtils;
-import com.gg.springbootinit.model.dto.Chart.ChartAddRequest;
-import com.gg.springbootinit.model.dto.Chart.ChartEditRequest;
-import com.gg.springbootinit.model.dto.Chart.ChartQueryRequest;
-import com.gg.springbootinit.model.dto.Chart.ChartUpdateRequest;
+import com.gg.springbootinit.model.dto.Chart.*;
 import com.gg.springbootinit.model.entity.Chart;
 import com.gg.springbootinit.model.entity.User;
 import com.gg.springbootinit.service.ChartService;
 import com.gg.springbootinit.service.UserService;
+import com.gg.springbootinit.utils.ExcelUtils;
 import com.gg.springbootinit.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -216,6 +216,34 @@ public class ChartController {
         boolean result = chartService.updateById(chart);
         return ResultUtils.success(result);
     }
+
+
+    /**
+     * 文件上传
+     *
+     * @param multipartFile
+     * @param genChartByAiRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/gen")
+    public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile,
+                                           GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+        String name = genChartByAiRequest.getName();
+        String goal = genChartByAiRequest.getGoal();
+        String chartType = genChartByAiRequest.getChartType();
+
+        // 数据校验
+        ThrowUtils.throwIf(StringUtils.isBlank(name), ErrorCode.PARAMS_ERROR, "目标为空");
+        ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空");
+
+        StringBuilder userInput = new StringBuilder();
+        userInput.append("分析目标:").append(goal).append("\n");
+        String result = ExcelUtils.excelToCsv(multipartFile);
+        userInput.append("数据:").append(result);
+        return ResultUtils.success(userInput.toString());
+    }
+
 
     /**
      * 获取查询包装类
